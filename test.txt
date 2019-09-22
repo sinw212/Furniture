@@ -1,1 +1,1 @@
-test_ksh
+test_hsa
