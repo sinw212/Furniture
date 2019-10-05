@@ -13,4 +13,10 @@
         android:layout_height="match_parent"
         android:visibility="visible"/>
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@+id/preview"
+        android:src="@drawable/icon_human" />
+
 </RelativeLayout>

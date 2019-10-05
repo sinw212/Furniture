@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\git\\VRFA\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-bn\\values-bn.xml",
+            "outputFile": "C:\\git\\VRFA\\VRFA\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-bn\\values-bn.xml",
             "map": [
                 {
                     "source": "C:\\Users\\홍승아\\.gradle\\caches\\transforms-2\\files-2.1\\70632b0b45110208f2aefab7a078ef1b\\res\\values-bn\\values-bn.xml",

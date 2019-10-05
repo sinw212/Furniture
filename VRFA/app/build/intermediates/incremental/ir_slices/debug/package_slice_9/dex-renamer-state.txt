@@ -1,1 +1,4 @@
-#Mon Sep 30 22:31:22 KST 2019
+#Sat Oct 05 15:43:45 KST 2019
+base.0=C\:\\git\\VRFA\\VRFA\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\9
+path.0=classes.dex
+renamed.0=classes.dex

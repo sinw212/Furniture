@@ -1,8 +1,27 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\git\\VRFA\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values\\values.xml",
+            "outputFile": "C:\\git\\VRFA\\VRFA\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values\\values.xml",
             "map": [
+                {
+                    "source": "C:\\git\\VRFA\\VRFA\\app\\src\\main\\res\\values\\styles.xml",
+                    "from": {
+                        "startLines": "3",
+                        "startColumns": "4",
+                        "startOffsets": "57",
+                        "endLines": "8",
+                        "endColumns": "12",
+                        "endOffsets": "376"
+                    },
+                    "to": {
+                        "startLines": "413",
+                        "startColumns": "4",
+                        "startOffsets": "24646",
+                        "endLines": "418",
+                        "endColumns": "12",
+                        "endOffsets": "24960"
+                    }
+                },
                 {
                     "source": "C:\\Users\\홍승아\\.gradle\\caches\\transforms-2\\files-2.1\\9f6fa2b1b2820866b066f39a5a5609b0\\res\\values\\values.xml",
                     "from": {
@@ -42,7 +61,7 @@
                     }
                 },
                 {
-                    "source": "C:\\git\\VRFA\\app\\src\\main\\res\\values\\colors.xml",
+                    "source": "C:\\git\\VRFA\\VRFA\\app\\src\\main\\res\\values\\colors.xml",
                     "from": {
                         "startLines": "4,2,3",
                         "startColumns": "4,4,4",
@@ -56,25 +75,6 @@
                         "startOffsets": "7643,7689,7736",
                         "endColumns": "45,46,50",
                         "endOffsets": "7684,7731,7782"
-                    }
-                },
-                {
-                    "source": "C:\\git\\VRFA\\app\\src\\main\\res\\values\\styles.xml",
-                    "from": {
-                        "startLines": "3",
-                        "startColumns": "4",
-                        "startOffsets": "57",
-                        "endLines": "8",
-                        "endColumns": "12",
-                        "endOffsets": "376"
-                    },
-                    "to": {
-                        "startLines": "413",
-                        "startColumns": "4",
-                        "startOffsets": "24646",
-                        "endLines": "418",
-                        "endColumns": "12",
-                        "endOffsets": "24960"
                     }
                 },
                 {
@@ -97,7 +97,7 @@
                     }
                 },
                 {
-                    "source": "C:\\git\\VRFA\\app\\src\\main\\res\\values\\strings.xml",
+                    "source": "C:\\git\\VRFA\\VRFA\\app\\src\\main\\res\\values\\strings.xml",
                     "from": {
                         "startLines": "1",
                         "startColumns": "4",
