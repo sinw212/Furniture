@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_marginTop="130dp"
+        android:layout_width="400dp"
+        android:layout_height="150dp"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <EditText
+            android:id="@+id/heightInput"
+            android:layout_marginTop="10dp"
+            android:layout_width="253dp"
+            android:layout_height="61dp"
+            android:ems="10"
+            android:hint="키입력"
+            android:inputType="textPersonName"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            tools:layout_editor_absoluteX="239dp"
+            tools:layout_editor_absoluteY="143dp" />
+
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/reuseButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="그대로 사용"
+                tools:layout_editor_absoluteX="261dp"
+                tools:layout_editor_absoluteY="235dp" />
+
+            <Button
+                android:id="@+id/renewButton"
+                android:layout_marginLeft="50dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="갱신"
+                tools:layout_editor_absoluteX="370dp"
+                tools:layout_editor_absoluteY="235dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
