@@ -1,6 +1,7 @@
 package com.example.vrfa;
 
 import android.Manifest;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.os.Build;
@@ -8,6 +9,8 @@ import android.os.Bundle;
 import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -21,9 +24,14 @@ public class MainActivity extends AppCompatActivity {
     private SurfaceHolder holder;
     public static MainActivity getInstance;
 
+    int i = 0;
+    ImageView imageV1 = null;
+    ImageView imageV2 = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.activity_main);
 
        Button reuseButton = (Button) findViewById(R.id.reuseButton);
@@ -88,7 +96,8 @@ public class MainActivity extends AppCompatActivity {
                 // 권한 허가시
                 setInit();
             } else {
-                // 권한 거부시
+                // 거부 누르면 어플 종료
+                finish();
             }
         }
     }
@@ -103,6 +112,29 @@ public class MainActivity extends AppCompatActivity {
         mainCamera = Camera.open();
 
         setContentView(R.layout.camera);
+
+        ImageButton button_switch = (ImageButton)findViewById(R.id.button_switch);
+        imageV1 = (ImageView)findViewById(R.id.ImageV1);
+        imageV2 = (ImageView)findViewById(R.id.ImageV2);
+
+        imageV1.setVisibility(View.VISIBLE);
+        imageV2.setVisibility(View.INVISIBLE);
+
+        button_switch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                i = 1 - i;
+
+                if(i == 0) {
+                    imageV1.setVisibility(View.VISIBLE);
+                    imageV2.setVisibility(View.INVISIBLE);
+                }
+                else {
+                    imageV1.setVisibility(View.INVISIBLE);
+                    imageV2.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 
         // SurfaceView를 상속받은 레이아웃을 정의한다.
         surfaceView = (CameraPreview) findViewById(R.id.preview);
