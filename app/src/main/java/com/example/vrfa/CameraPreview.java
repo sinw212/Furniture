@@ -2,6 +2,8 @@ package com.example.vrfa;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.hardware.Camera;
 import android.util.AttributeSet;
 import android.view.Surface;
@@ -180,5 +182,16 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         }
 
         return optimalSize;
+    }
+
+    public Bitmap drawBitmap() {
+        Bitmap bitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+
+        surfaceDestroyed(null); //Thread 잠시 멈춤(pause)
+        draw(canvas);
+        surfaceCreated(null); //Thread 재개(resume)
+
+        return bitmap;
     }
 }
