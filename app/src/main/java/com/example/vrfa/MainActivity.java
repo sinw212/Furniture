@@ -1,18 +1,24 @@
 package com.example.vrfa;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.Button;
@@ -23,14 +29,10 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     private final static int RESULT_PERMISSIONS = 100;
@@ -39,11 +41,8 @@ public class MainActivity extends AppCompatActivity {
     private static Camera mainCamera;
     private SurfaceHolder holder;
     public static MainActivity getInstance;
-
-    private static final int REQUEST_IMAGE_CAPTURE = 672;
-    private String imageFilePath;
-    private Uri photoUri;
-
+    public static Bitmap bm;
+    
     int i = 0;
     ImageView imageV1 = null;
     ImageView imageV2 = null;
@@ -144,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
         button_capture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Bitmap bm = Bitmap.createBitmap(surfaceView.drawBitmap());
+                surfaceView.createBitmap();
 
                 if(bm != null) {
                     try {
@@ -152,7 +151,6 @@ public class MainActivity extends AppCompatActivity {
                         OutputStream fOut = null;
                         File file = new File(path + "/", "screentest.jpg");
                         fOut = new FileOutputStream(file);
-
                         bm.compress(Bitmap.CompressFormat.JPEG, 85, fOut);
                         fOut.flush();
                         fOut.close();
@@ -160,6 +158,10 @@ public class MainActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
+
+                View viewLocat = new MyView(getApplicationContext());
+
+                setContentView(viewLocat);
             }
         });
 
@@ -186,5 +188,81 @@ public class MainActivity extends AppCompatActivity {
         holder = surfaceView.getHolder();
         holder.addCallback(surfaceView);
         holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+    }
+
+    protected class MyView extends View {
+        Paint mPaint;
+
+        public MyView(Context context) {
+            super(context);
+            mPaint = new Paint();
+        }
+
+        protected void onDraw(Canvas canvas) {
+            //뷰의 배경 지정
+            //canvas.drawBitmap(bm, 0,0,mPaint);
+            surfaceView.drawBitmap();
+            mPaint.setColor(Color.RED);
+            mPaint.setStrokeWidth(3);
+        }
+
+        float x[] = new float[2];
+        float y[] = new float[2];
+
+        @Override
+        public boolean onTouchEvent(MotionEvent event) {
+            super.onTouchEvent(event);
+
+            for (int i = 0; i < 2; i++) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    x[i] = event.getX();
+                    y[i] = event.getY();
+
+                    String msg = (i + 1) + "번째 값을 입력받음 : " + x[i] + " / " + y[i];
+
+                    Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+
+                    return true;
+                }
+            }
+
+            Dialog();
+
+            return false;
+        }
+
+        private void Dialog() {
+            //다이얼로그 바디
+            AlertDialog.Builder alertdialog = new AlertDialog.Builder(getContext());
+            //다이얼로그 메세지
+            alertdialog.setMessage("두 점을 모두 선택하셨습니다.");
+            //확인버튼
+            alertdialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+//                    Toast.makeText(activity, "'확인'버튼을 눌렀습니다.", Toast.LENGTH_SHORT).show();
+                    //Calculate.java 로 넘기기
+                    Intent intent = new Intent(getContext(), Calculate.class);
+                    intent.putExtra("data", "put data");
+                    startActivityForResult(intent,1);
+                }
+            });
+            //다시찍기버튼
+            alertdialog.setNegativeButton("다시찍기", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+//                    Toast.makeText(activity, "'다시찍기' 버튼을 눌렀습니다.", Toast.LENGTH_SHORT).show();
+                    //점 다시 찍도록 리셋시키기
+                }
+            });
+            //메인 다이얼로그 생성
+            AlertDialog alert = alertdialog.create();
+            //아이콘 설정
+            alert.setIcon(R.drawable.icon);
+            //타이틀
+            alert.setTitle("경고");
+            //다이얼로그 보기
+            alert.show();
+        }
     }
 }

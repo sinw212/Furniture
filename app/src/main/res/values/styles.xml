@@ -10,6 +10,9 @@
         <!-- No Title Bar-->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+
+        <!-- 상태바 없애기 -->
+        <item name="android:windowFullscreen">true</item>
     </style>
 
     <style name="SplashTheme" parent="@android:style/Theme.Light.NoTitleBar">

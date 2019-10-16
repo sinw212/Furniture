@@ -23,6 +23,8 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     private List<Camera.Size> listPreviewSizes;
     private Camera.Size previewSize;
     private Context context;
+    Canvas canvas;
+    Bitmap bitmap;
 
     // SurfaceView 생성자
     public CameraPreview(Context context, AttributeSet attrs) {
@@ -184,14 +186,18 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         return optimalSize;
     }
 
-    public Bitmap drawBitmap() {
-        Bitmap bitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
+    public void createBitmap() {
+        bitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+        canvas = new Canvas(bitmap);
 
         surfaceDestroyed(null); //Thread 잠시 멈춤(pause)
         draw(canvas);
         surfaceCreated(null); //Thread 재개(resume)
 
-        return bitmap;
     }
+
+    public void drawBitmap(){
+            canvas.drawBitmap(bitmap,0,0,null);
+    }
+
 }
