@@ -17,6 +17,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -26,6 +27,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -159,6 +161,9 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
 
+//                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                startActivityForResult(intent,0);
+
                 View viewLocat = new MyView(getApplicationContext());
 
                 setContentView(viewLocat);
@@ -190,6 +195,14 @@ public class MainActivity extends AppCompatActivity {
         holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
     }
 
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        Bitmap bm = (Bitmap)data.getExtras().get("data");
+//        imageV1.setImageBitmap(bm);
+//    }
+
     protected class MyView extends View {
         Paint mPaint;
 
@@ -206,12 +219,14 @@ public class MainActivity extends AppCompatActivity {
             mPaint.setStrokeWidth(3);
         }
 
-        float x[] = new float[2];
-        float y[] = new float[2];
+
 
         @Override
         public boolean onTouchEvent(MotionEvent event) {
             super.onTouchEvent(event);
+
+            float x[] = new float[2];
+            float y[] = new float[2];
 
             for (int i = 0; i < 2; i++) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {

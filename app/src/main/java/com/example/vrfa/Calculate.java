@@ -15,6 +15,7 @@ public class Calculate {
             else if(y[0] > y[1]){
                 height = y[0] - y[1];
             }
+            else { height = 0;}
         }
         else if(x[0] > x[1]){
             width = x[0] - x[1];
@@ -25,6 +26,7 @@ public class Calculate {
             {
                 height= y[1]- y[0];
             }
+            else { height = 0; }
         }
     }
 }
