@@ -17,6 +17,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -24,6 +25,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,21 +33,24 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 
 public class MainActivity extends AppCompatActivity {
     private final static int RESULT_PERMISSIONS = 100;
+    public static Bitmap shareBitmap;
 
     private CameraPreview surfaceView;
     private static Camera mainCamera;
     private SurfaceHolder holder;
     public static MainActivity getInstance;
-    public static Bitmap bm;
-    
+
     int i = 0;
     ImageView imageV1 = null;
     ImageView imageV2 = null;
+    LinearLayout shareLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
 
         Button reuseButton = (Button) findViewById(R.id.reuseButton);
         Button renewButton = (Button) findViewById(R.id.renewButton);
+
+        shareLayout = (LinearLayout)findViewById(R.id.shareLayout);
 
         reuseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setInit() {
+
         getInstance = this;
         // 카메라 객체를 R.layout.activity_main의 레이아웃에 선언한 SurfaceView에서 먼저 정의해야 함으로 setContentView 보다 먼저 정의한다.
         mainCamera = Camera.open();
@@ -141,27 +149,28 @@ public class MainActivity extends AppCompatActivity {
         imageV2.setVisibility(View.INVISIBLE);
 
         button_capture.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
-                surfaceView.createBitmap();
 
-                if(bm != null) {
-                    try {
-                        String path = Environment.getExternalStorageDirectory().toString();
-                        OutputStream fOut = null;
-                        File file = new File(path + "/", "screentest.jpg");
-                        fOut = new FileOutputStream(file);
-                        bm.compress(Bitmap.CompressFormat.JPEG, 85, fOut);
-                        fOut.flush();
-                        fOut.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
+/*
+
+                try{
+                    File storage = getCacheDir();
+                    File file = new File(storage,"test.png");
+                    FileOutputStream fos = openFileOutput("test.png" , 0);
+                    bm.compress(Bitmap.CompressFormat.PNG, 100 , fos);
+                    fos.flush();
+                    fos.close();
+
+                    Toast.makeText(MainActivity.this, "file ok", Toast.LENGTH_SHORT).show();
+                 } catch(Exception e) { Toast.makeText(MainActivity.this, "file error", Toast.LENGTH_SHORT).show();}
+*/
 
                 View viewLocat = new MyView(getApplicationContext());
 
                 setContentView(viewLocat);
+
             }
         });
 
@@ -192,77 +201,75 @@ public class MainActivity extends AppCompatActivity {
 
     protected class MyView extends View {
         Paint mPaint;
+        Bitmap bm;
 
         public MyView(Context context) {
             super(context);
             mPaint = new Paint();
+            capture();
+
+           /* try {
+                File storage = getCacheDir();
+                bm = BitmapFactory.decodeFile(storage.toString());
+                Toast.makeText(getApplicationContext(), "load ok", Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                Toast.makeText(getApplicationContext(), "load error", Toast.LENGTH_SHORT).show();
+            }*/
+
         }
 
-        protected void onDraw(Canvas canvas) {
+        @Override
+        public void onDraw(Canvas canvas) {
             //뷰의 배경 지정
-            //canvas.drawBitmap(bm, 0,0,mPaint);
-            surfaceView.drawBitmap();
+            //canvas.drawBitmap(bm, 0,0, null);
             mPaint.setColor(Color.RED);
-            mPaint.setStrokeWidth(3);
+            mPaint.setStrokeWidth(30f);
         }
 
-        float x[] = new float[2];
-        float y[] = new float[2];
 
         @Override
         public boolean onTouchEvent(MotionEvent event) {
             super.onTouchEvent(event);
 
-            for (int i = 0; i < 2; i++) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    x[i] = event.getX();
-                    y[i] = event.getY();
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                float x = event.getX();
+                float y = event.getY();
 
-                    String msg = (i + 1) + "번째 값을 입력받음 : " + x[i] + " / " + y[i];
+                String msg = "좌표 : " + x + " / " + y;
 
-                    Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
 
-                    return true;
-                }
+                return true;
             }
-
-            Dialog();
 
             return false;
         }
 
-        private void Dialog() {
-            //다이얼로그 바디
-            AlertDialog.Builder alertdialog = new AlertDialog.Builder(getContext());
-            //다이얼로그 메세지
-            alertdialog.setMessage("두 점을 모두 선택하셨습니다.");
-            //확인버튼
-            alertdialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-//                    Toast.makeText(activity, "'확인'버튼을 눌렀습니다.", Toast.LENGTH_SHORT).show();
-                    //Calculate.java 로 넘기기
-                    Intent intent = new Intent(getContext(), Calculate.class);
-                    intent.putExtra("data", "put data");
-                    startActivityForResult(intent,1);
-                }
-            });
-            //다시찍기버튼
-            alertdialog.setNegativeButton("다시찍기", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-//                    Toast.makeText(activity, "'다시찍기' 버튼을 눌렀습니다.", Toast.LENGTH_SHORT).show();
-                    //점 다시 찍도록 리셋시키기
-                }
-            });
-            //메인 다이얼로그 생성
-            AlertDialog alert = alertdialog.create();
-            //아이콘 설정
-            alert.setIcon(R.drawable.icon);
-            //타이틀
-            alert.setTitle("경고");
-            //다이얼로그 보기
-            alert.show();
-        }
+
+
     }
+    public void capture(){
+
+        Bitmap overlay=Bitmap.createBitmap(shareBitmap.getWidth(),shareBitmap.getHeight(),shareBitmap.getConfig());
+        Canvas canvas=new Canvas(overlay);
+        /*canvas.drawBitmap(shareBitmap, 0,0, null);
+
+        shareLayout.buildDrawingCache();
+        Bitmap bm=shareLayout.getDrawingCache();
+        canvas.drawBitmap(bm,0,0,null);*/
+
+        try{
+            File storage = getCacheDir();
+            File file = new File(storage,"test.png");
+            FileOutputStream fos = openFileOutput("test.png" , 0);
+            overlay.compress(Bitmap.CompressFormat.PNG, 100 , fos);
+            fos.flush();
+            fos.close();
+
+            Toast.makeText(MainActivity.this, "file ok", Toast.LENGTH_SHORT).show();
+        } catch(Exception e) { Toast.makeText(MainActivity.this, "file error", Toast.LENGTH_SHORT).show();}
+
+
+    }
+
 }
