@@ -1,6 +1,7 @@
 package com.example.vrfa;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -25,6 +26,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -36,7 +38,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 
-public class MainActivity extends AppCompatActivity {
+import static android.view.MotionEvent.*;
+
+public class MainActivity extends AppCompatActivity implements View.OnTouchListener {
     private final static int RESULT_PERMISSIONS = 100;
 
     private CameraPreview surfaceView;
@@ -44,7 +48,10 @@ public class MainActivity extends AppCompatActivity {
     private SurfaceHolder holder;
     public static MainActivity getInstance;
     public static Bitmap bm;
-    
+    private RelativeLayout RL;
+
+    private TipsView mTipsView;
+
     int i = 0;
     ImageView imageV1 = null;
     ImageView imageV2 = null;
@@ -74,6 +81,9 @@ public class MainActivity extends AppCompatActivity {
                     setInit();
                 }
             }
+
+            //mTipsView = (TipsView)findViewByld(R.id.레이아웃);
+            //mTipsView.setOnTouchListener(this);
         });
 
         renewButton.setOnClickListener(new View.OnClickListener() {
@@ -93,6 +103,8 @@ public class MainActivity extends AppCompatActivity {
                     }
             }
         });
+
+
     }
 
     public void requestPermissionCamera() {
@@ -143,6 +155,7 @@ public class MainActivity extends AppCompatActivity {
         imageV2.setVisibility(View.INVISIBLE);
 
         button_capture.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ClickableViewAccessibility")
             @Override
             public void onClick(View view) {
                 surfaceView.createBitmap();
@@ -165,8 +178,10 @@ public class MainActivity extends AppCompatActivity {
 //                startActivityForResult(intent,0);
 
                 View viewLocat = new MyView(getApplicationContext());
+               // viewLocat.setOnTouchListener(this);
 
                 setContentView(viewLocat);
+
             }
         });
 
@@ -195,6 +210,36 @@ public class MainActivity extends AppCompatActivity {
         holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
     }
 
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {//터치시 점이미지 생성
+        // 문제 : setOntouchListener 어디에 넣어야해...
+
+        float x[] = new float[2];
+        float y[] = new float[2];
+
+        if (event.getAction() == ACTION_DOWN) {//Down이 발생한경우(화면 눌렀을때)
+            for (int i = 0; i < 2; i++) {
+                x[i] = event.getX();
+                y[i] = event.getY();
+
+                ImageView dotimg = new ImageView(this);
+                dotimg.setImageResource(R.drawable.dot);
+
+                dotimg.setX(x[i]);
+                dotimg.setY(y[i]);
+
+                RL.addView(dotimg);
+                dotimg.setVisibility(View.VISIBLE);
+
+            }
+
+        }
+
+
+        return false;
+     }
+
+
 //    @Override
 //    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 //        super.onActivityResult(requestCode, resultCode, data);
@@ -220,7 +265,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-
         @Override
         public boolean onTouchEvent(MotionEvent event) {
             super.onTouchEvent(event);
@@ -229,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
             float y[] = new float[2];
 
             for (int i = 0; i < 2; i++) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                if (event.getAction() == ACTION_DOWN) {
                     x[i] = event.getX();
                     y[i] = event.getY();
 

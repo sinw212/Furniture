@@ -1,1 +1,1 @@
-cd "C:\Portfolio\VisionRecog\Project"
+cd "C:/Portfolio/"

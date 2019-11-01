@@ -1,4 +1,4 @@
-package com.example.vrfa;
+/*package com.example.vrfa;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -78,7 +78,7 @@ public class WebCrawling extends Activity {
         @Override
         protected void onPostExecute(Void result) {
             //ArraList를 인자로 해서 어답터와 연결한다.
-            MyAdapter myAdapter = new MyAdapter(list);
+            ItemObject.MyAdapter myAdapter = new ItemObject.MyAdapter(list);
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setAdapter(myAdapter);
@@ -174,4 +174,4 @@ public class ItemObject {
             return mList.size();
         }
     }
-}
+}*/
