@@ -33,8 +33,13 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
     private final static int RESULT_PERMISSIONS = 100;
@@ -44,7 +49,9 @@ public class MainActivity extends AppCompatActivity {
     private SurfaceHolder holder;
     public static MainActivity getInstance;
     public static Bitmap bm;
-    
+    public SimpleDateFormat mformat = new SimpleDateFormat("yyyyMMddHHmmss");
+    String filenamePath;
+
     int i = 0;
     ImageView imageV1 = null;
     ImageView imageV2 = null;
@@ -134,57 +141,13 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.camera);
 
-        ImageButton button_capture = (ImageButton)findViewById(R.id.button_capture);
-        ImageButton button_switch = (ImageButton)findViewById(R.id.button_switch);
-        imageV1 = (ImageView)findViewById(R.id.ImageV1);
-        imageV2 = (ImageView)findViewById(R.id.ImageV2);
+        ImageButton button_capture = (ImageButton) findViewById(R.id.button_capture);
+        ImageButton button_switch = (ImageButton) findViewById(R.id.button_switch);
+        imageV1 = (ImageView) findViewById(R.id.ImageV1);
+        imageV2 = (ImageView) findViewById(R.id.ImageV2);
 
         imageV1.setVisibility(View.VISIBLE);
         imageV2.setVisibility(View.INVISIBLE);
-
-        button_capture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                surfaceView.createBitmap();
-
-                if(bm != null) {
-                    try {
-                        String path = Environment.getExternalStorageDirectory().toString();
-                        OutputStream fOut = null;
-                        File file = new File(path + "/", "screentest.jpg");
-                        fOut = new FileOutputStream(file);
-                        bm.compress(Bitmap.CompressFormat.JPEG, 85, fOut);
-                        fOut.flush();
-                        fOut.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-//                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//                startActivityForResult(intent,0);
-
-                View viewLocat = new MyView(getApplicationContext());
-
-                setContentView(viewLocat);
-            }
-        });
-
-        button_switch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                i = 1 - i;
-
-                if(i == 0) {
-                    imageV1.setVisibility(View.VISIBLE);
-                    imageV2.setVisibility(View.INVISIBLE);
-                }
-                else {
-                    imageV1.setVisibility(View.INVISIBLE);
-                    imageV2.setVisibility(View.VISIBLE);
-                }
-            }
-        });
 
         // SurfaceView를 상속받은 레이아웃을 정의한다.
         surfaceView = (CameraPreview) findViewById(R.id.preview);
@@ -193,6 +156,107 @@ public class MainActivity extends AppCompatActivity {
         holder = surfaceView.getHolder();
         holder.addCallback(surfaceView);
         holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+
+        button_capture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                View rootView = getWindow().getDecorView();
+
+                File screenShot = ScreenShot(rootView);
+                if(screenShot != null) {
+                    //갤러리추가
+                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(screenShot)));
+                }
+//                surfaceView.createBitmap(bm);
+//
+//                filenamePath = mformat.format(System.currentTimeMillis());
+//                String fileName = filenamePath;
+//
+//                //서버로부터 받아온 bitmap을 screentest이름의 jpg로 변환하여 캐시에 저장
+//                saveBitmapToJpeg(bm, fileName); //비트맵을 파일로 변환 후 캐시에 저장하는 함수
+//
+//                ArrayList<String> filenamePath = new ArrayList<>();
+//
+//                File file = new File(getCacheDir().toString());
+//                File files[] = file.listFiles();
+//
+//                for (File tempFile : files) {
+//                    Log.d("MyTag", tempFile.getName());
+//                }
+//                Log.e("MyTag", "size : " + filenamePath.size());
+//
+//                if (filenamePath.size() > 0) {
+//                    int randomPosition = new Random().nextInt(filenamePath.size());
+//
+//                    //filenamePath 배열에 있는 파일 경로 중 하나를 랜덤으로 불러오기
+//                    String path = getCacheDir() + "/" + filenamePath.get(randomPosition);
+//
+//                    //파일 경로로부터 비트맵 생성
+//                    bm = BitmapFactory.decodeFile(path);
+//                }
+//                surfaceView.createBitmap(bm);
+            }
+        });
+
+//                if(bm != null) {
+//                    try {
+//                        String path = Environment.getExternalStorageDirectory().toString();
+//                        OutputStream fOut = null;
+//                        File file = new File(path + "/", "screentest.jpg");
+//                        fOut = new FileOutputStream(file);
+//                        bm.compress(Bitmap.CompressFormat.JPEG, 85, fOut);
+//                        fOut.flush();
+//                        fOut.close();
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                startActivityForResult(intent,0);
+//
+//                View viewLocat = new MyView(getApplicationContext());
+
+//                setContentView(viewLocat);
+//            }
+//        });
+
+        button_switch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                i = 1 - i;
+
+                if (i == 0) {
+                    imageV1.setVisibility(View.VISIBLE);
+                    imageV2.setVisibility(View.INVISIBLE);
+                } else {
+                    imageV1.setVisibility(View.INVISIBLE);
+                    imageV2.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+    }
+
+    private File ScreenShot(View view) {
+        view.setDrawingCacheEnabled(true); //화면에 뿌릴때 캐시를 사용하게 한다
+
+        bm = view.getDrawingCache(); //캐시를 비트맵으로 변환
+
+        String filename = "screenshot.png";
+        //Pictures폴더 screenshot.png 파일
+        File file = new File(Environment.getExternalStorageDirectory()+"/Pictures", filename);
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(file);
+            bm.compress(Bitmap.CompressFormat.PNG, 90, fos); //비트맵을 PNG 파일로 변환
+            fos.close();
+        } catch(IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        view.setDrawingCacheEnabled(false);
+        return file;
+
     }
 
 //    @Override
@@ -203,23 +267,21 @@ public class MainActivity extends AppCompatActivity {
 //        imageV1.setImageBitmap(bm);
 //    }
 
-    protected class MyView extends View {
-        Paint mPaint;
-
-        public MyView(Context context) {
-            super(context);
-            mPaint = new Paint();
-        }
-
-        protected void onDraw(Canvas canvas) {
-            //뷰의 배경 지정
-            //canvas.drawBitmap(bm, 0,0,mPaint);
-            surfaceView.drawBitmap();
-            mPaint.setColor(Color.RED);
-            mPaint.setStrokeWidth(3);
-        }
-
-
+//    protected class MyView extends View {
+//        Paint mPaint;
+//
+//        public MyView(Context context) {
+//            super(context);
+//            mPaint = new Paint();
+//        }
+//
+//        protected void onDraw(Canvas canvas) {
+//            //뷰의 배경 지정
+//            //canvas.drawBitmap(bm, 0,0,mPaint);
+//            surfaceView.drawBitmap();
+//            mPaint.setColor(Color.RED);
+//            mPaint.setStrokeWidth(3);
+//        }
 
         @Override
         public boolean onTouchEvent(MotionEvent event) {
@@ -240,7 +302,6 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
             }
-
             Dialog();
 
             return false;
@@ -248,7 +309,7 @@ public class MainActivity extends AppCompatActivity {
 
         private void Dialog() {
             //다이얼로그 바디
-            AlertDialog.Builder alertdialog = new AlertDialog.Builder(getContext());
+            AlertDialog.Builder alertdialog = new AlertDialog.Builder(getApplicationContext());
             //다이얼로그 메세지
             alertdialog.setMessage("두 점을 모두 선택하셨습니다.");
             //확인버튼
@@ -257,7 +318,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onClick(DialogInterface dialog, int which) {
 //                    Toast.makeText(activity, "'확인'버튼을 눌렀습니다.", Toast.LENGTH_SHORT).show();
                     //Calculate.java 로 넘기기
-                    Intent intent = new Intent(getContext(), Calculate.class);
+                    Intent intent = new Intent(getApplicationContext(), Calculate.class);
                     intent.putExtra("data", "put data");
                     startActivityForResult(intent,1);
                 }
@@ -278,6 +339,32 @@ public class MainActivity extends AppCompatActivity {
             alert.setTitle("경고");
             //다이얼로그 보기
             alert.show();
+        }
+
+
+    private void saveBitmapToJpeg (Bitmap bm, String name) {
+        //내부저장소 캐시 경로 받아오기
+        File storage = getCacheDir();
+
+        //저장할 파일 이름
+        String fileName = name + ".jpg";
+
+        //storage에 파일 인스턴스 생성
+        File tempFile = new File(storage, fileName);
+
+        try {
+            //자동으로 빈 파일 생성
+            tempFile.createNewFile();
+            //파일을 쓸 수 있는 스트림 준비
+            FileOutputStream fout = new FileOutputStream(tempFile);
+            //compress함수 이용하여 스트림에 비트맵 저장
+            bm.compress(Bitmap.CompressFormat.JPEG, 100, fout);
+            //스트림 사용 후 닫아주기
+            fout.close();
+        } catch (FileNotFoundException e) {
+            Log.e("MyTag", "FileNotFoundException : " + e.getMessage());
+        } catch (IOException e) {
+            Log.e("MyTag", "IOException : " + e.getMessage());
         }
     }
 }
