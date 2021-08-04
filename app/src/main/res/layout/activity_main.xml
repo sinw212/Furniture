@@ -1,47 +1,30 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     tools:context=".MainActivity">
 
     <LinearLayout
-        android:layout_marginTop="150dp"
-        android:layout_width="300dp"
-        android:layout_height="100dp"
-        android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center">
 
         <EditText
             android:id="@+id/edit_height"
-            android:layout_width="match_parent"
+            android:paddingLeft="5dp"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
+            android:textSize="20sp"
             android:hint="키를 입력하시오." />
 
-        <LinearLayout
-            android:layout_marginTop="15dp"
+        <Button
+            android:id="@+id/OkButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/reuseButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="그대로 사용"
-                tools:layout_editor_absoluteX="261dp"
-                tools:layout_editor_absoluteY="235dp" />
-
-            <Button
-                android:id="@+id/renewButton"
-                android:layout_marginLeft="50dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="갱신"
-                tools:layout_editor_absoluteX="370dp"
-                tools:layout_editor_absoluteY="235dp" />
-        </LinearLayout>
+            android:text="확인" />
     </LinearLayout>
 </LinearLayout>

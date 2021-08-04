@@ -184,22 +184,4 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         }
         return optimalSize;
     }
-
-    public void createBitmap(Bitmap bitmap) { //SurfaceView Cansvas를 Bitmap으로 저장하기
-        //Bitmap 생성 -> Canvas 연결
-        //Surfaceview에 Canvas를 보내서 그려주기
-        //연결된 Bitmap에 그대로 그려져 나옴
-        this.bitmap = bitmap;
-        bitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
-
-        canvas = new Canvas(bitmap);
-//        surfaceDestroyed(null); //Thread 잠시 멈춤(pause)
-        draw(canvas);
-//        surfaceCreated(null); //Thread 재개(resume)
-    }
-
-//    public void drawBitmap(){
-//            canvas.drawBitmap(bitmap,0,0,null);
-//    }
-
 }

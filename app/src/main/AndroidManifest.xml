@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.vrfa">
 
     <uses-permission android:name="android.permission.CAMERA"/>
-  <!--&lt;!&ndash; <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>-->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/> -->
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="false"
@@ -18,7 +17,7 @@
         <activity
             android:name=".SplashActivity"
             android:theme="@style/SplashTheme"
-            android:screenOrientation="portrait">
+            android:screenOrientation="landscape">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,6 +28,16 @@
         <activity
             android:name=".MainActivity"
             android:screenOrientation="landscape">
+        </activity>
+
+        <activity
+            android:name=".SelectFurniture"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name=".WebCrawling"
+            android:screenOrientation="portrait">
         </activity>
 
         <provider
