@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_horizontal"
-    android:orientation="horizontal"
+    android:gravity="center"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
     <LinearLayout
@@ -16,7 +16,7 @@
         <EditText
             android:id="@+id/edit_height"
             android:paddingLeft="5dp"
-            android:layout_width="250dp"
+            android:layout_width="260dp"
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:hint="키를 입력하시오." />
@@ -27,4 +27,12 @@
             android:layout_height="wrap_content"
             android:text="확인" />
     </LinearLayout>
+
+    <TextView
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="* 카메라에 비춰지는 사용자의 키를 입력해주세요."
+        android:textSize="15sp"
+        android:textColor="#787878"/>
 </LinearLayout>

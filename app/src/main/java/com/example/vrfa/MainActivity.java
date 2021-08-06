@@ -1,9 +1,14 @@
 package com.example.vrfa;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,8 +43,6 @@ public class MainActivity extends AppCompatActivity {
     int pointX[] = new int[2];
     int pointY[] = new int[2];
 
-    Intent intent;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +50,10 @@ public class MainActivity extends AppCompatActivity {
 
         edit_height = findViewById(R.id.edit_height);
         OkButton = findViewById(R.id.OkButton);
-        user_height = String.valueOf(edit_height.getText());
+
+        //팝업(액티비티) 호출
+        Intent intent = new Intent(this, CustomPopup.class);
+        startActivity(intent);
 
         OkButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.camera);
 
-        ImageButton button_capture = (ImageButton) findViewById(R.id.button_capture);
         ImageButton button_switch = (ImageButton) findViewById(R.id.button_switch);
         imageV1 = (ImageView) findViewById(R.id.ImageV1);
         imageV2 = (ImageView) findViewById(R.id.ImageV2);
@@ -106,35 +112,21 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
-        button_capture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-
-            }
-        });
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         boolean ret = false;
 
-        //터치가 되고 있는 위치
-        //얼마나 움직이는지를 계산하려면 이 값을 계속 유지하여 계산해야됨
-        x = (int) event.getX();
-        y = (int) event.getY();
-
         switch(event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
-                //ACTION_UP이 밠생할 때까지 이벤트가 발생하면 이 onTouchEvent가 호출됨
+                x = (int) event.getX();
+                y = (int) event.getY();
                 ret = true;
                 break;
             case MotionEvent.ACTION_UP:
-                //click이 되었으니, OnClickListener 호출
                 i++;
                 performClick(x, y, i);
-
                 ret = true;
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -173,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("진입secondPointY", String.valueOf(pointY[1]));
                 Log.d("진입sample_height", String.valueOf(sample_height));
 
-                intent = new Intent(getApplicationContext(), SelectFurniture.class);
+                Intent intent = new Intent(getApplicationContext(), SelectFurniture.class);
                 intent.putExtra("user_height", user_height);
                 intent.putExtra("firstPoint_X", pointX[0]);
                 intent.putExtra("secondPoint_X", pointX[1]);

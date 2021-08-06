@@ -40,6 +40,11 @@
             android:screenOrientation="portrait">
         </activity>
 
+        <activity
+            android:name=".CustomPopup"
+            android:theme="@android:style/Theme.Dialog">
+        </activity>
+
         <provider
             android:authorities="com.example.vrfa"
             android:name="androidx.core.content.FileProvider"
