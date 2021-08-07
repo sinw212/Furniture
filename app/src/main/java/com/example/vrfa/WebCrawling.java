@@ -9,11 +9,13 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,6 +24,7 @@ public class WebCrawling extends Activity {
     private RecyclerView recyclerView;
     private ArrayList<CrawlingData> list = new ArrayList();
 
+    TextView txt_furnitureName;
     String FurnitureName;
 
     @Override
@@ -30,9 +33,11 @@ public class WebCrawling extends Activity {
         setContentView(R.layout.web_crawling);
 
         Intent intent = getIntent();
-        FurnitureName = intent.getStringExtra("FurnitureName");
-
         recyclerView = findViewById(R.id.recyclerview);
+        txt_furnitureName = findViewById(R.id.txt_furnitureName);
+
+        FurnitureName = intent.getStringExtra("FurnitureName");
+        txt_furnitureName.setText("\"" + FurnitureName + "\" 구매 사이트 목록");
 
         //AsyncTask 작동시킴(파싱)
         new Description().execute();
@@ -58,44 +63,21 @@ public class WebCrawling extends Activity {
         protected Void doInBackground(Void... params) {
             try {
                 //선택된 가구 품목의 구매 사이트 연동
-                Log.d("진입사이트주소", "https://search.shopping.naver.com/search/all.nhn?query="+FurnitureName+"&frm=NVSCVUI");
-                Document doc = Jsoup.connect("https://search.shopping.naver.com/search/all.nhn?query="+FurnitureName+"&frm=NVSCVUI").get();
-//                Elements mElementData1 = doc.select("div[class=thumbnail_thumb_wrap__1pEkS _wrapper]");
-                Elements mElementData1 = doc.select("div.thumbnail_thumb_wrap__1pEkS _wrapper img");
-                int mElementData1Size = mElementData1.size();
-                String imgUrl[] = new String[mElementData1Size];
-                int i = 0;
+                Document doc = Jsoup.connect("https://search.shopping.naver.com/search/all?query="+FurnitureName+"&frm=NVSCVUI").get();
+//                Document doc = Jsoup.connect("https://search.shopping.naver.com/search/all?query=%EC%86%8C%ED%8C%8C&frm=NVSCVUI").get();
+                Elements mElementData1 = doc.select("div[class=basicList_inner__eY_mq]");
 
                 for(Element elem : mElementData1){
-//                    <ul class="ah_1" data-list''
-//                    <li clas="ah_item".. >
-//                    <a href = "hts;dlkfjl;">
-//
-//                    doc.select("ul.ah_l li.ah_item a");
-//                    url = e.attr("href")
-//                    num = e.select("span.ah_r").text();
-//                    String f_imgUrl = elem.select("img[class=_productLazyImg]").attr("data-original"); //가구 이미지
-                    String f_imgUrl = elem.attr("src"); //가구 이미지
+                    String f_title = elem.select("div[class=basicList_info_area__17Xyo] a").attr("title");
+                    String f_imgUrl = elem.select("div[class=basicList_img_area__a3NRA] a img").attr("src");
+                    String f_price = elem.select("div[class=basicList_info_area__17Xyo] span[class=price_num__2WUXn]").text();
+                    String f_link = elem.select("div[class=basicList_info_area__17Xyo] a").attr("href");
 
-                    imgUrl[i] = f_imgUrl;
-                    i++;
-                }
-
-//                Elements mElementData2 = doc.select("div[class=basicList_title__3P9Q7]");
-                Elements mElementData2 = doc.select("div.basicList_info_area__17Xyo");
-                //int mElementData2Size = mElementData2.size();
-                i = 0;
-
-                for(Element elem : mElementData2){
-                    String f_title = elem.select("div.basicList_title__3P9Q7 a").attr("title");
-//                    String f_title = elem.select("div[class=tit] a").text(); //사이트 제목
-                    String f_price = elem.select("div.basicList_price_area__1UXXR strong.basicList_price__2r23_ span.price_num__2WUXn").text();
-//                    String f_price = elem.select("span[class=price] em").text(); //가구 가격
-                    String f_link = elem.select("div.basicList_title__3P9Q7 a").attr("href");
-//                    String f_link = elem.select("div[class=tit] a").attr("href"); //실 구매 사이트 URL
-
-                    list.add(new CrawlingData(f_title, imgUrl[i], f_price, f_link));
-                    i++;
+                    Log.d("진입f_title", f_title);
+                    Log.d("진입f_imgUrl", f_imgUrl);
+                    Log.d("진입f_price", f_price);
+                    Log.d("진입f_link", f_link);
+                    list.add(new CrawlingData(f_title, f_imgUrl, f_price, f_link));
                 }
             } catch (IOException e) {
                 e.printStackTrace();

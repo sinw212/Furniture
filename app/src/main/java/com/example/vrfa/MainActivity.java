@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
                 if (user_height.equals("") || user_height == null)
                     Toast.makeText(MainActivity.this, "키를 입력해주세요.", Toast.LENGTH_SHORT).show();
                 else {
-                    Log.d("진입user_height", user_height);
                     setInit();
                 }
             }
@@ -158,13 +157,6 @@ public class MainActivity extends AppCompatActivity {
         builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
-                Log.d("진입user_height", user_height);
-                Log.d("진입firstpointX", String.valueOf(pointX[0]));
-                Log.d("진입secondpointX", String.valueOf(pointX[1]));
-                Log.d("진입firpointY", String.valueOf(pointY[0]));
-                Log.d("진입secondPointY", String.valueOf(pointY[1]));
-                Log.d("진입sample_height", String.valueOf(sample_height));
-
                 Intent intent = new Intent(getApplicationContext(), SelectFurniture.class);
                 intent.putExtra("user_height", user_height);
                 intent.putExtra("firstPoint_X", pointX[0]);

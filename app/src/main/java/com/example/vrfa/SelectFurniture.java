@@ -44,13 +44,6 @@ public class SelectFurniture extends Activity {
         SecondPointY = intent.getIntExtra("secondPoint_Y", 0);
         SampleHeight = intent.getIntExtra("sample_height", 0);
 
-        Log.d("진입22userheight", UserHeight);
-        Log.d("진입22firstpointX", String.valueOf(FirstPointX));
-        Log.d("진입22secondpointX", String.valueOf(SecondPointX));
-        Log.d("진입22firpointY", String.valueOf(FirstPointY));
-        Log.d("진입22secondPointY", String.valueOf(SecondPointY));
-        Log.d("진입22sampleheight", String.valueOf(SampleHeight));
-
         btn_select.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,7 +55,7 @@ public class SelectFurniture extends Activity {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
                                 Toast.makeText(getApplicationContext(), furnitures[id] + "을 선택하였습니다.", Toast.LENGTH_SHORT).show();
-                                text_furniture.setText(">>> " + furnitures[id]);
+                                text_furniture.setText(furnitures[id]);
                                 dialog.dismiss();
                             }
                         });
